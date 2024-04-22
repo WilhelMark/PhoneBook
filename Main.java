@@ -1,12 +1,10 @@
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Map<String, Contact> contacts = new HashMap<>();
-        PhoneBook phoneBook = new PhoneBook(contacts);
+        PhoneBook phoneBook = new PhoneBook(new HashMap<>());
         Menu menu = new Menu(new Scanner(System.in));
         FileHandler fileHandler = new FileHandler();
 
@@ -46,7 +44,7 @@ public class Main {
                     menu.showSuccessMessage();
                     break;
                 case 7:
-                    fileHandler.saveContactsToFile(phoneBook.getContacts(), "contacts.dat");
+                    fileHandler.saveContactsToFile(phoneBook.getAllContacts(), "contacts.dat");
                     System.out.println("Контакты успешно сохранены в файл.");
                     return;
                 default:
