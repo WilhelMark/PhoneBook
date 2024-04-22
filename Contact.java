@@ -1,16 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-/**
- * Класс, представляющий контакт. Содержит поля для ФИО, номера телефонов, e-mail и дополнительной информации.
- */
 public class Contact {
 
-    private final String fullName;
-    private final List<String> phoneNumbers;
-    private final String email;
-    private final String additionalInfo;
+    private String fullName;
+    private List<String> phoneNumbers;
+    private String email;
+    private String additionalInfo;
 
     public Contact(String fullName, String phoneNumber, String email, String additionalInfo) {
         this.fullName = fullName;
@@ -20,97 +16,46 @@ public class Contact {
         this.additionalInfo = additionalInfo;
     }
 
-    /**
-     * Метод для добавления номера телефона в контакт.
-     *
-     * @param phoneNumber Номер телефона для добавления.
-     */
-    public void addPhoneNumber(String phoneNumber) {
-        phoneNumbers.add(phoneNumber);
+    public Contact(String fullName, List<String> phoneNumbers, String email, String additionalInfo) {
+        this.fullName = fullName;
+        this.phoneNumbers = phoneNumbers;
+        this.email = email;
+        this.additionalInfo = additionalInfo;
     }
 
-    /**
-     * Метод для редактирования данных контакта.
-     *
-     * @param contact Контакт для редактирования.
-     */
-    public void edit(Contact contact) {
-        if (contact.getPhoneNumbers().size() > 0) {
-            phoneNumbers.clear();
-            phoneNumbers.addAll(contact.getPhoneNumbers());
-        }
-        if (contact.getEmail() != null) {
-            email = contact.getEmail();
-        }
-        if (contact.getAdditionalInfo() != null) {
-            additionalInfo = contact.getAdditionalInfo();
-        }
-    }
-
-    /**
-     * Метод для слияния данных контактов.
-     *
-     * @param contact Контакт для слияния.
-     */
-    public void merge(Contact contact) {
-        if (contact.getPhoneNumbers().size() > 0) {
-            phoneNumbers.addAll(contact.getPhoneNumbers());
-        }
-        if (contact.getEmail() != null) {
-            email = contact.getEmail();
-        }
-        if (contact.getAdditionalInfo() != null) {
-            additionalInfo = contact.getAdditionalInfo();
-        }
-    }
-
-    /**
-     * Метод для получения полного имени контакта.
-     *
-     * @return Полное имя контакта.
-     */
     public String getFullName() {
         return fullName;
     }
 
-    /**
-     * Метод для получения номеров телефонов контакта.
-     *
-     * @return Список номеров телефонов контакта.
-     */
     public List<String> getPhoneNumbers() {
         return phoneNumbers;
     }
 
-    /**
-     * Метод для получения e-mail контакта.
-     *
-     * @return E-mail контакта.
-     */
     public String getEmail() {
         return email;
     }
 
-    /**
-     * Метод для получения дополнительной информации контакта.
-     *
-     * @return Дополнительная информация контакта.
-     */
     public String getAdditionalInfo() {
         return additionalInfo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Contact contact = (Contact) o;
-        return Objects.equals(fullName, contact.fullName);
+    public void addPhoneNumber(String phoneNumber) {
+        phoneNumbers.add(phoneNumber);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fullName);
+    public void edit(Contact contact) {
+        if (contact.getFullName() != null) {
+            fullName = contact.getFullName();
+        }
+        if (contact.getPhoneNumbers() != null) {
+            phoneNumbers = contact.getPhoneNumbers();
+        }
+        if (contact.getEmail() != null) {
+            email = contact.getEmail();
+        }
+        if (contact.getAdditionalInfo() != null) {
+            additionalInfo = contact.getAdditionalInfo();
+        }
     }
 
     @Override
