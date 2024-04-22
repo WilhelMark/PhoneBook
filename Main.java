@@ -2,54 +2,53 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * Главный класс приложения, содержащий метод main для запуска программы.
- * Взаимодействие с пользователем, вызов методов для работы с контактами.
- */
 public class Main {
 
     public static void main(String[] args) {
-        // Создание телефонной книги на основе HashMap
-        PhoneBook phoneBook = new PhoneBook(new HashMap<>());
+        Map<String, Contact> contacts = new HashMap<>();
+        PhoneBook phoneBook = new PhoneBook(contacts);
+        Menu menu = new Menu(new Scanner(System.in));
+        FileHandler fileHandler = new FileHandler();
 
-        // Объект для ввода данных пользователем
-        Scanner scanner = new Scanner(System.in);
-
-        // Главный цикл программы
         while (true) {
-            // Вывод меню и получение выбора пользователя
-            System.out.println("Выберите действие:\n" +
-                    "1. Просмотр контактов\n" +
-                    "2. Добавление контакта\n" +
-                    "3. Редактирование контакта\n" +
-                    "4. Удаление контакта\n" +
-                    "5. Поиск контакта\n" +
-                    "6. Слияние контактов\n" +
-                    "7. Выход");
-            int choice = scanner.nextInt();
-
-            // Выполнение действия в зависимости от выбора пользователя
+            int choice = menu.showMenuAndGetChoice();
+            Contact contact = null;
             switch (choice) {
                 case 1:
                     phoneBook.viewContacts();
                     break;
                 case 2:
-                    phoneBook.addContact(scanner);
+                    contact = menu.getContactData();
+                    phoneBook.addContact(contact);
+                    menu.showSuccessMessage();
                     break;
                 case 3:
-                    phoneBook.editContact(scanner);
+                    contact = menu.getContactForEdit();
+                    phoneBook.editContact(contact);
+                    menu.showSuccessMessage();
                     break;
                 case 4:
-                    phoneBook.deleteContact(scanner);
+                    contact = menu.getContactForSearch();
+                    phoneBook.deleteContact(contact);
+                    menu.showSuccessMessage();
                     break;
                 case 5:
-                    phoneBook.searchContact(scanner);
+                    String contactForSearch = menu.getContactForSearch();
+                    Contact searchedContact = phoneBook.searchContact(contactForSearch);
+                    if (searchedContact != null) {
+                        System.out.println(searchedContact);
+                    } else {
+                        System.out.println("Контакт не найден.");
+                    }
                     break;
                 case 6:
                     phoneBook.mergeContacts();
+                    menu.showSuccessMessage();
                     break;
                 case 7:
-                    System.exit(0);
+                    fileHandler.saveContactsToFile(phoneBook.getContacts(), "contacts.dat");
+                    System.out.println("Контакты успешно сохранены в файл.");
+                    return;
                 default:
                     System.out.println("Неверный выбор.");
             }
