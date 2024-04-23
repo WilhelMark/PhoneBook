@@ -79,6 +79,15 @@ public class Menu {
         System.out.println("7. Получить все контакты");
         System.out.println("0. Выход");
         System.out.print("Введите свой выбор: ");
-        return scanner.nextInt();
+        while (!scanner.hasNextInt()) {
+            System.out.println("Неверный ввод. Пожалуйста, введите число.");
+            scanner.next();
+            System.out.print("Введите свой выбор: ");
+        }
+        int choice = scanner.nextInt();
+        while (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
+        return choice;
     }
 }
