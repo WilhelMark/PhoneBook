@@ -1,8 +1,15 @@
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
+        try {
+            System.setOut(new PrintStream(System.out, true, "cp866"));
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("Unsupported encoding: cp866");
+        }
         Scanner scanner = new Scanner(System.in);
         Map<String, Contact> phoneBook = new HashMap<>();
         Menu menu = new Menu(scanner, phoneBook);
@@ -15,7 +22,12 @@ public class Main {
                     menu.viewContacts();
                     break;
                 case 2:
-                    menu.addContact();
+                    scanner.nextLine(); // очистка буфера
+                    System.out.print("Введите полное имя: ");
+                    String fullName = scanner.nextLine();
+                    System.out.print("Введите номер телефона: ");
+                    String phoneNumber = scanner.nextLine();
+                    phoneBook.put(fullName, new Contact(fullName, phoneNumber));
                     break;
                 case 3:
                     menu.editContact();
@@ -146,6 +158,9 @@ class Contact {
 
     @Override
     public String toString() {
-        return fullName + ": " + phoneNumber;
+        return "Contact{" +
+                "fullName='" + fullName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
     }
 }

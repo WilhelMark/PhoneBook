@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -20,6 +19,7 @@ public class Menu {
 
     public void addContact() {
         System.out.print("Введите полное имя: ");
+        scanner.nextLine();
         String fullName = scanner.nextLine();
         System.out.print("Введите номер телефона: ");
         String phoneNumber = scanner.nextLine();
@@ -28,6 +28,7 @@ public class Menu {
 
     public void editContact() {
         System.out.print("Введите полное имя контакта для редактирования: ");
+        scanner.nextLine();
         String fullName = scanner.nextLine();
         if (phoneBook.containsKey(fullName)) {
             Contact contact = phoneBook.get(fullName);
@@ -41,6 +42,7 @@ public class Menu {
 
     public void deleteContact() {
         System.out.print("Введите полное имя контакта, который необходимо удалить: ");
+        scanner.nextLine();
         String fullName = scanner.nextLine();
         if (phoneBook.containsKey(fullName)) {
             phoneBook.remove(fullName);
@@ -85,9 +87,7 @@ public class Menu {
             System.out.print("Введите свой выбор: ");
         }
         int choice = scanner.nextInt();
-        while (scanner.hasNextLine()) {
-            scanner.nextLine();
-        }
+        scanner.nextLine(); // добаленный вызов метода
         return choice;
     }
 }
