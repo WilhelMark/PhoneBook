@@ -90,6 +90,7 @@ class Menu {
 
     private final Scanner scanner;
     private final PhoneBook phoneBook;
+    private String fullName;
 
     public Menu(Scanner scanner, PhoneBook phoneBook) {
         this.scanner = scanner;
@@ -143,7 +144,6 @@ class Menu {
 
     public void searchContact() {
         System.out.print("Введите номер телефона для поиска: ");
-        String phoneNumber = scanner.nextLine();
         Contact searchedContact = phoneBook.findContact(fullName);
         if (searchedContact != null) {
             System.out.println(searchedContact);
