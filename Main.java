@@ -11,15 +11,15 @@ public class Main {
             System.err.println("Unsupported encoding: cp866");
         }
         Scanner scanner = new Scanner(System.in);
-        Map<String, Contact> phoneBook = new HashMap<>();
+        PhoneBook phoneBook = new PhoneBook();
         Menu menu = new Menu(scanner, phoneBook);
 
         while (true) {
             int choice = menu.showMenu();
-
+            scanner.nextLine();
             switch (choice) {
                 case 1:
-                    menu.viewContacts();
+                    phoneBook.printContacts();
                     break;
                 case 2:
                     scanner.nextLine(); // очистка буфера
@@ -27,24 +27,57 @@ public class Main {
                     String fullName = scanner.nextLine();
                     System.out.print("Введите номер телефона: ");
                     String phoneNumber = scanner.nextLine();
-                    phoneBook.put(fullName, new Contact(fullName, phoneNumber));
+                    phoneBook.addContact(new Contact(fullName, phoneNumber));
                     break;
                 case 3:
-                    menu.editContact();
+                    System.out.print("Введите полное имя контакта для редактирования: ");
+                    String editName = scanner.nextLine();
+                    Contact editedContact = phoneBook.findContact(editName);
+                    if (editedContact != null) {
+                        System.out.print("Введите новый номер телефона: ");
+                        String newPhoneNumber = scanner.nextLine();
+                        editedContact.setPhoneNumber(newPhoneNumber);
+                    } else {
+                        System.out.println("Контакт не найден.");
+                    }
                     break;
                 case 4:
-                    menu.deleteContact();
+                    System.out.print("Введите полное имя контакта для удаления: ");
+                    String deleteName = scanner.nextLine();
+                    phoneBook.deleteContact(deleteName);
                     break;
                 case 5:
-                    menu.searchContact();
+                    System.out.print("Введите имя контакта для поиска: ");
+                    String searchName = scanner.nextLine();
+                    Contact searchedContact = phoneBook.findContact(searchName);
+                    if (searchedContact != null) {
+                        System.out.println(searchedContact);
+                    } else {
+                        System.out.println("Контакт не найден.");
+                    }
                     break;
                 case 6:
-                    menu.mergeContacts();
+                    System.out.print("Введите полное имя первого контакта для слияния: ");
+                    String firstContactName = scanner.nextLine();
+                    Contact firstContact = phoneBook.findContact(firstContactName);
+                    System.out.print("Введите полное имя второго контакта для слияния: ");
+                    String secondContactName = scanner.nextLine();
+                    Contact secondContact = phoneBook.findContact(secondContactName);
+                    if (firstContact != null && secondContact != null) {
+                        phoneBook.mergeContacts(firstContact, secondContact);
+                    } else {
+                        System.out.println("Один или оба контакта не найдены.");
+                    }
                     break;
                 case 7:
-                    menu.getAllContacts();
+                    Map<String, Contact> contacts = phoneBook.getContacts();
+                    for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+                        System.out.println(entry.getValue());
+                    }
                     break;
                 case 0:
+                    System.out.println("До свидания!");
+                    scanner.close();
                     System.exit(0);
                 default:
                     System.out.println("Неверный выбор.");
@@ -55,10 +88,10 @@ public class Main {
 
 class Menu {
 
-    private Scanner scanner;
-    private Map<String, Contact> phoneBook;
+    private final Scanner scanner;
+    private final PhoneBook phoneBook;
 
-    public Menu(Scanner scanner, Map<String, Contact> phoneBook) {
+    public Menu(Scanner scanner, PhoneBook phoneBook) {
         this.scanner = scanner;
         this.phoneBook = phoneBook;
     }
@@ -76,28 +109,27 @@ class Menu {
         return scanner.nextInt();
     }
 
-    public void viewContacts() {
-        for (Map.Entry<String, Contact> entry : phoneBook.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
+    public void printContacts() {
+        phoneBook.printContacts();
     }
 
     public void addContact() {
+        scanner.nextLine(); // очистка буфера
         System.out.print("Введите полное имя: ");
         String fullName = scanner.next();
         System.out.print("Введите номер телефона: ");
         String phoneNumber = scanner.next();
-        phoneBook.put(fullName, new Contact(fullName, phoneNumber));
+        phoneBook.addContact(new Contact(fullName, phoneNumber));
     }
 
     public void editContact() {
         System.out.print("Введите полное имя контакта для редактирования: ");
-        String fullName = scanner.next();
-        if (phoneBook.containsKey(fullName)) {
-            Contact contact = phoneBook.get(fullName);
+        String fullName = scanner.nextLine();
+        Contact editedContact = phoneBook.findContact(fullName);
+        if (editedContact != null) {
             System.out.print("Введите новый номер телефона: ");
-            String newPhoneNumber = scanner.next();
-            contact.setPhoneNumber(newPhoneNumber);
+            String newPhoneNumber = scanner.nextLine();
+            editedContact.setPhoneNumber(newPhoneNumber);
         } else {
             System.out.println("Контакт не найден.");
         }
@@ -105,38 +137,46 @@ class Menu {
 
     public void deleteContact() {
         System.out.print("Введите полное имя контакта, который необходимо удалить: ");
-        String fullName = scanner.next();
-        if (phoneBook.containsKey(fullName)) {
-            phoneBook.remove(fullName);
+        String fullName = scanner.nextLine();
+        phoneBook.deleteContact(fullName);
+    }
+
+    public void searchContact() {
+        System.out.print("Введите номер телефона для поиска: ");
+        String phoneNumber = scanner.nextLine();
+        Contact searchedContact = phoneBook.findContact(fullName);
+        if (searchedContact != null) {
+            System.out.println(searchedContact);
         } else {
             System.out.println("Контакт не найден.");
         }
     }
 
-    public void searchContact() {
-        System.out.print("Введите номер телефона для поиска: ");
-        String phoneNumber = scanner.next();
-        for (Map.Entry<String, Contact> entry : phoneBook.entrySet()) {
-            if (entry.getValue().getPhoneNumber().equals(phoneNumber)) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-                return;
-            }
-        }
-        System.out.println("Контакт не найден.");
-    }
-
     public void mergeContacts() {
-        // Implementation of the mergeContacts method
+        System.out.print("Введите полное имя первого контакта для слияния: ");
+        String firstFullName = scanner.nextLine();
+        Contact firstContact = phoneBook.findContact(firstFullName);
+        System.out.print("Введите полное имя второго контакта для слияния: ");
+        String secondFullName = scanner.nextLine();
+        Contact secondContact = phoneBook.findContact(secondFullName);
+        if (firstContact != null && secondContact != null) {
+            phoneBook.mergeContacts(firstContact, secondContact);
+        } else {
+            System.out.println("Один или оба контакта не найдены.");
+        }
     }
 
     public void getAllContacts() {
-        // Implementation of the getAllContacts method
+        Map<String, Contact> contacts = phoneBook.getContacts();
+        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+            System.out.println(entry.getValue());
+        }
     }
 }
 
 class Contact {
 
-    private String fullName;
+    private final String fullName;
     private String phoneNumber;
 
     public Contact(String fullName, String phoneNumber) {
@@ -158,9 +198,56 @@ class Contact {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
+        return "Контакт:\n" +
+        "    полное имя = " + fullName + '\n' +
+        "    номер телефона = " + phoneNumber + '\n';
+    }
+}
+
+class PhoneBook {
+
+    private Map<String, Contact> contacts = new HashMap<>();
+
+    public void printContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("Список контактов пуст.");
+            return;
+        }
+        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+            System.out.println(entry.getValue());
+        }
+    }
+
+    public void addContact(Contact contact) {
+        if (contacts.containsKey(contact.getFullName())) {
+            System.out.println("Контакт с таким полным именем уже существует.");
+            return;
+        }
+        contacts.put(contact.getFullName(), contact);
+    }
+
+    public Contact findContact(String fullName) {
+        return contacts.get(fullName);
+    }
+
+    public void deleteContact(String fullName) {
+        if (!contacts.containsKey(fullName)) {
+            System.out.println("Контакт с таким полным именем не найден.");
+            return;
+        }
+        contacts.remove(fullName);
+    }
+
+    public Map<String, Contact> getContacts() {
+        return contacts;
+    }
+
+    public void mergeContacts(Contact firstContact, Contact secondContact) {
+        if (firstContact == null || secondContact == null) {
+            System.out.println("Один или оба контакта не найдены.");
+            return;
+        }
+        firstContact.setPhoneNumber(firstContact.getPhoneNumber() + ", " + secondContact.getPhoneNumber());
+        deleteContact(secondContact.getFullName());
     }
 }
