@@ -22,9 +22,9 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
+        return "Контакт{" +
+        "ФИО='" + fullName + '\'' +
+        ", Номер телефона='" + phoneNumber + '\'' +
+        '}';
     }
 }
