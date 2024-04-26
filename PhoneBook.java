@@ -2,10 +2,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 class PhoneBook {
-    private Map<String, Contact> contacts;
+    private Map<String, Contact> contacts = new HashMap<>();
 
-    public PhoneBook() {
-        this.contacts = new HashMap<>();
+    public void printContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("Список контактов пуст.");
+            return;
+        }
+        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+            System.out.println(entry.getValue());
+        }
     }
 
     public void addContact(Contact contact) {
@@ -39,15 +45,5 @@ class PhoneBook {
         }
         firstContact.setPhoneNumber(firstContact.getPhoneNumber() + ", " + secondContact.getPhoneNumber());
         deleteContact(secondContact.getFullName());
-    }
-
-    public void printContacts() {
-        if (contacts.isEmpty()) {
-            System.out.println("Список контактов пуст.");
-            return;
-        }
-        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
-            System.out.println(entry.getValue());
-        }
     }
 }

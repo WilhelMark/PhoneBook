@@ -22,7 +22,6 @@ public class Main {
                     phoneBook.printContacts();
                     break;
                 case 2:
-                    scanner.nextLine(); // очистка буфера
                     System.out.print("Введите полное имя: ");
                     String fullName = scanner.nextLine();
                     System.out.print("Введите номер телефона: ");
