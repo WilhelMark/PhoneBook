@@ -1,40 +1,49 @@
+import java.util.HashMap;
 import java.util.Map;
 
-public class PhoneBook {
+class PhoneBook {
+    private Map<String, Contact> contacts = new HashMap<>();
 
-    private Map<String, Contact> contacts;
-
-    public PhoneBook(Map<String, Contact> contacts) {
-        this.contacts = contacts;
+    public void printContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("Список контактов пуст.");
+            return;
+        }
+        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+            System.out.println(entry.getValue());
+        }
     }
 
     public void addContact(Contact contact) {
+        if (contacts.containsKey(contact.getFullName())) {
+            System.out.println("Контакт с таким полным именем уже существует.");
+            return;
+        }
         contacts.put(contact.getFullName(), contact);
     }
 
-    public void editContact(Contact contact) {
-        contacts.put(contact.getFullName(), contact);
+    public Contact findContact(String fullName) {
+        return contacts.get(fullName);
     }
 
-    public void deleteContact(Contact contact) {
-        contacts.remove(contact.getFullName());
+    public void deleteContact(String fullName) {
+        if (!contacts.containsKey(fullName)) {
+            System.out.println("Контакт с таким полным именем не найден.");
+            return;
+        }
+        contacts.remove(fullName);
     }
 
-    public Contact searchContact(String name) {
-        return contacts.get(name);
-    }
-
-    public void mergeContacts() {
-        // TODO: implement merging contacts
-    }
-
-    public Map<String, Contact> getAllContacts() {
+    public Map<String, Contact> getContacts() {
         return contacts;
     }
 
-    public void viewContacts() {
-        for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+    public void mergeContacts(Contact firstContact, Contact secondContact) {
+        if (firstContact == null || secondContact == null) {
+            System.out.println("Один или оба контакта не найдены.");
+            return;
         }
+        firstContact.setPhoneNumber(firstContact.getPhoneNumber() + ", " + secondContact.getPhoneNumber());
+        deleteContact(secondContact.getFullName());
     }
 }

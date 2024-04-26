@@ -1,6 +1,6 @@
 public class Contact {
 
-    private String fullName;
+    private final String fullName;
     private String phoneNumber;
 
     public Contact(String fullName, String phoneNumber) {
@@ -22,9 +22,8 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
+        return "Контакт:\n" +
+        "    полное имя = " + fullName + '\n' +
+        "    номер телефона = " + phoneNumber + '\n';
     }
 }
